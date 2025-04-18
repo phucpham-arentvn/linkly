@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -13,8 +13,9 @@
     "@heroicons/react": "2.1.1",
     "@reduxjs/toolkit": "^2.6.1",
     "@supabase/supabase-js": "^2.49.4",
-    "daisyui": "^5.0.16",
+    "daisyui": "^5.0.25",
     "firebase": "^11.6.0",
+    "framer-motion": "^12.7.4",
     "heroicons": "^2.2.0",
     "ky": "^1.8.0",
     "lucide-react": "^0.488.0",

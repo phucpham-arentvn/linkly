@@ -15,7 +15,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Cloud Messaging
-const messaging = typeof window !== "undefined" ? getMessaging(app) : null;
+const getFirebaseMessaging = () => {
+  try {
+    return typeof window !== "undefined" ? getMessaging(app) : null;
+  } catch (error) {
+    console.log("error", error);
+    return null;
+  }
+};
+
+const messaging = getFirebaseMessaging();
 
 // Request permission and get FCM token
 export const requestNotificationPermission = async () => {
