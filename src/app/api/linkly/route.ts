@@ -2,15 +2,9 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { nanoid } from "nanoid";
 import { getUserFromToken } from "@/lib/middleware";
+import { getClientIP } from "@/helper";
 
 // Helper function to get client IP
-function getClientIP(request: Request): string {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
-  }
-  return "unknown-ip";
-}
 
 export const POST = async (request: Request) => {
   try {
