@@ -13,7 +13,7 @@ export default function Header() {
       <div className="flex gap-4">
         <button
           onClick={() => signIn("google")}
-          className="btn btn-primary flex items-center gap-2"
+          className="btn btn-primary btn-outline flex items-center gap-2"
         >
           <GoogleIcon />
           Login with Google
