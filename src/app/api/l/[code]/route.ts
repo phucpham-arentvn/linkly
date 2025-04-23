@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-export const GET = async (
-  request: Request,
-  { params }: { params: { code: string } }
-) => {
+export const GET = async (request: Request, { params }: { params: any }) => {
   try {
     const { code } = params;
 
