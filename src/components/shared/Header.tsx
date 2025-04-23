@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { signIn } from "next-auth/react";
+import GoogleIcon from "./icons/GoogleIcon";
 
 export default function Header() {
   return (
@@ -7,8 +11,13 @@ export default function Header() {
         <Image src="/logo.svg" alt="Linkly" width={140} height={32} />
       </div>
       <div className="flex gap-4">
-        <button className="btn btn-ghost">Login</button>
-        <button className="btn btn-primary">Register Now</button>
+        <button
+          onClick={() => signIn("google")}
+          className="btn btn-primary flex items-center gap-2"
+        >
+          <GoogleIcon />
+          Login with Google
+        </button>
       </div>
     </div>
   );

@@ -19,6 +19,7 @@
     "firebase": "^11.6.0",
     "framer-motion": "^12.7.4",
     "heroicons": "^2.2.0",
+    "jwt-decode": "^4.0.0",
     "ky": "^1.8.0",
     "lucide-react": "^0.488.0",
     "nanoid": "^5.1.5",

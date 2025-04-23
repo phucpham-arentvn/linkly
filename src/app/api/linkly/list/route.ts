@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { getUserFromToken } from "@/lib/middleware";
 import { getClientIP } from "@/helper";
+import { getUserFromCookie } from "@/lib/middleware";
 
 export const GET = async (request: Request) => {
   try {
-    // Get user from token or IP
-    const user = await getUserFromToken(request);
+    const user = await getUserFromCookie(request);
     const userId = user?.id || `ip_${getClientIP(request)}`;
-
-    console.log("userId", userId);
-
     // Get query parameters
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "1");

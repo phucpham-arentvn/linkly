@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { nanoid } from "nanoid";
-import { getUserFromToken } from "@/lib/middleware";
+import { getUserFromCookie } from "@/lib/middleware";
 import { getClientIP } from "@/helper";
 
 export const POST = async (request: Request) => {
   try {
     const { url } = await request.json();
-    const user = await getUserFromToken(request);
+    const user = await getUserFromCookie(request);
     const userId = user?.id || `ip_${getClientIP(request)}`;
 
     // Validate URL
