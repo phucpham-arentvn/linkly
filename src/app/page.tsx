@@ -1,5 +1,8 @@
 import ThemeToggle from "@/components/common/ThemeToggle";
 import Image from "next/image";
+import Header from "@/components/shared/Header";
+import ShortenInput from "@/components/shared/ShortenInput";
+import History from "@/components/shared/History";
 
 export default function Home() {
   return (
@@ -11,16 +14,8 @@ export default function Home() {
         </div>
         {/* Header */}
         <div className="w-full flex flex-col ">
-          <div className="w-full flex justify-between items-center">
-            <div className="flex items-center gap-1">
-              <Image src="/logo.svg" alt="Linkly" width={140} height={32} />
-            </div>
-            <div className="flex gap-4">
-              <button className="btn btn-ghost">Login</button>
-              <button className="btn btn-primary">Register Now</button>
-            </div>
-          </div>
-          <div className="container mx-auto px-4">
+          <Header />
+          <div className="container mx-auto px-4 mt-32">
             <div className="flex justify-center items-center">
               <Image
                 src="/main-text.svg"
@@ -29,10 +24,14 @@ export default function Home() {
                 height={32}
               />
             </div>
-            <div className="text-center">
+            <div className="text-center text-md mt-2 w-1/2 mx-auto">
               Linkly is an efficient and easy-to-use URL shortening service that
               streamlines your online experience.
             </div>
+          </div>
+          <ShortenInput className="mt-10" />
+          <div className="container mx-auto px-20 mt-10">
+            <History />
           </div>
         </div>
       </div>
