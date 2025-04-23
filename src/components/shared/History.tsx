@@ -1,16 +1,28 @@
+"use client";
+
 import { FC } from "react";
 import Image from "next/image";
 import clsx from "clsx";
+import { useGetLinklyQuery } from "@/redux/services/linkly.api";
+import { formatDistanceToNow } from "date-fns";
+import CopyButton from "@/components/common/CopyButton";
 
 interface HistoryProps {
   className?: string;
 }
 
-// Sample data
 const History: FC<HistoryProps> = ({ className }) => {
-  const links: any[] = [];
+  const { data: response, isLoading } = useGetLinklyQuery({});
 
-  if (!links?.length) {
+  if (isLoading) {
+    return (
+      <div className={clsx("flex justify-center py-16", className)}>
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
+
+  if (!response?.data?.length) {
     return (
       <div
         className={clsx(
@@ -61,30 +73,20 @@ const History: FC<HistoryProps> = ({ className }) => {
 
         {/* Table body */}
         <tbody>
-          {links.map((link, index) => (
-            <tr key={index} className="hover">
+          {response.data.map((link) => (
+            <tr key={link.id} className="hover">
               <td className="flex items-center gap-2">
-                <span>{link.shortLink}</span>
-                <button className="btn btn-ghost btn-xs">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-                    />
-                  </svg>
-                </button>
+                <span>
+                  {process.env.NEXT_PUBLIC_APP_URL}/api/l/${link.short_link}
+                </span>
+                <CopyButton
+                  textToCopy={`${process.env.NEXT_PUBLIC_APP_URL}/api/l/${link.short_link}`}
+                  className="btn btn-ghost btn-xs gap-2"
+                />
               </td>
               <td>
                 <div className="flex items-center gap-2">
-                  {link.originalLink.includes("twitter.com") && (
+                  {link.origin_link.includes("twitter.com") && (
                     <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
@@ -92,7 +94,7 @@ const History: FC<HistoryProps> = ({ className }) => {
                       />
                     </svg>
                   )}
-                  {link.originalLink.includes("youtube.com") && (
+                  {link.origin_link.includes("youtube.com") && (
                     <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
@@ -100,29 +102,36 @@ const History: FC<HistoryProps> = ({ className }) => {
                       />
                     </svg>
                   )}
-                  <span className="truncate max-w-md">{link.originalLink}</span>
+                  <span className="truncate max-w-md">{link.origin_link}</span>
                 </div>
               </td>
               <td>
-                <Image
-                  src={link.qrCode}
-                  alt="QR Code"
-                  width={32}
-                  height={32}
-                  className="rounded-lg"
-                />
+                {link.icon && (
+                  <Image
+                    src={link.icon}
+                    alt="QR Code"
+                    width={32}
+                    height={32}
+                    className="rounded-lg"
+                  />
+                )}
               </td>
               <td>{link.clicks}</td>
               <td>
                 <div
-                  className={`badge ${
-                    link.status === "Active" ? "badge-success" : "badge-error"
-                  } gap-2`}
+                  className={clsx("badge gap-2", {
+                    "badge-success": link.status === "active",
+                    "badge-error": link.status === "inactive",
+                  })}
                 >
                   {link.status}
                 </div>
               </td>
-              <td>{link.date}</td>
+              <td>
+                {formatDistanceToNow(new Date(link.created_at), {
+                  addSuffix: true,
+                })}
+              </td>
             </tr>
           ))}
         </tbody>

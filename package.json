@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.49.4",
     "clsx": "^2.1.1",
     "daisyui": "^5.0.25",
+    "date-fns": "^4.1.0",
     "firebase": "^11.6.0",
     "framer-motion": "^12.7.4",
     "heroicons": "^2.2.0",

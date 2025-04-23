@@ -26,7 +26,24 @@ export const POST = async (request: Request) => {
       );
     }
 
-    // Generate short code
+    // Check if URL already exists for this user
+    const { data: existingUrl } = await supabase
+      .from("linkly")
+      .select()
+      .eq("origin_link", url)
+      .eq("user_id", userId)
+      .single();
+
+    if (existingUrl) {
+      return NextResponse.json({
+        shortCode: existingUrl.short_link,
+        originalUrl: existingUrl.origin_link,
+        shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/l/${existingUrl.short_link}`,
+        userId: existingUrl.user_id,
+      });
+    }
+
+    // Generate short code for new URL
     const shortCode = nanoid(8);
 
     const { data, error } = await supabase
@@ -56,7 +73,7 @@ export const POST = async (request: Request) => {
     return NextResponse.json({
       shortCode: data.short_link,
       originalUrl: data.origin_link,
-      shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/l/${shortCode}`,
+      shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/l/${shortCode}`,
       userId: data.user_id,
     });
   } catch (error: any) {

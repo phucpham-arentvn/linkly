@@ -9,6 +9,8 @@ export const GET = async (request: Request) => {
     const user = await getUserFromToken(request);
     const userId = user?.id || `ip_${getClientIP(request)}`;
 
+    console.log("userId", userId);
+
     // Get query parameters
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "1");

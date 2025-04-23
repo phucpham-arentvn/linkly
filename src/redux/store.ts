@@ -5,6 +5,7 @@ import { combineReducers } from "redux";
 import { apiKeysApi } from "./services/apiKeysApi";
 import { exampleApi } from "./services/exampleApi";
 import { userApi } from "./services/userApi";
+import { linklyApi } from "./services/linkly.api";
 import { rtkQueryErrorMiddleware } from "./middleware/errorMiddleware";
 
 // Define the root reducer
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   [apiKeysApi.reducerPath]: apiKeysApi.reducer,
   [exampleApi.reducerPath]: exampleApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
+  [linklyApi.reducerPath]: linklyApi.reducer,
 });
 
 // Configure persist
@@ -35,6 +37,7 @@ export const store = configureStore({
       .concat(apiKeysApi.middleware)
       .concat(exampleApi.middleware)
       .concat(userApi.middleware)
+      .concat(linklyApi.middleware)
       .concat(rtkQueryErrorMiddleware),
 });
 

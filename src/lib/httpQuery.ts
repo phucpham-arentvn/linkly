@@ -27,6 +27,10 @@ export const httpQuery = (
   return async ({ url, method, data, params, headers }) => {
     try {
       // Create ky instance with base configuration
+      console.log(
+        "process.env.NEXT_PUBLIC_BASE_URL",
+        process.env.NEXT_PUBLIC_BASE_URL
+      );
       const api = ky.create({
         prefixUrl: process.env.NEXT_PUBLIC_BASE_URL,
         ...baseOptions,
