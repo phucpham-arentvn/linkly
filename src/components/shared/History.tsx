@@ -33,7 +33,7 @@ const History: FC<HistoryProps> = ({ className }) => {
             />
           </svg>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-lg font-semibold text-primary mb-2">
           No links yet
         </h3>
         <p className="text-gray-500 text-center max-w-sm">
