@@ -40,6 +40,26 @@ export interface CreateLinklyResponse {
   userId: string;
 }
 
+export interface UpdateLinklyRequest {
+  shortCode: string;
+  url: string;
+  status?: string;
+}
+
+export interface UpdateLinklyResponse {
+  shortCode: string;
+  originalUrl: string;
+  shortUrl: string;
+  userId: string;
+  icon?: string;
+}
+
+export interface DeleteLinklyResponse {
+  message: string;
+  id: string;
+  shortCode: string;
+}
+
 export const linklyApi = createApi({
   reducerPath: "linklyApi",
   baseQuery: httpQuery(),
@@ -67,7 +87,28 @@ export const linklyApi = createApi({
       }),
       invalidatesTags: [API_TAGS.LINKLY],
     }),
+    updateLinkly: builder.mutation<UpdateLinklyResponse, UpdateLinklyRequest>({
+      query: (data) => ({
+        url: API_PATHS.LINKLY.UPDATE,
+        method: "put",
+        data,
+      }),
+      invalidatesTags: [API_TAGS.LINKLY],
+    }),
+    deleteLinkly: builder.mutation<DeleteLinklyResponse, string>({
+      query: (id) => ({
+        url: API_PATHS.LINKLY.DELETE,
+        method: "delete",
+        params: { id },
+      }),
+      invalidatesTags: [API_TAGS.LINKLY],
+    }),
   }),
 });
 
-export const { useGetLinklyQuery, useCreateLinklyMutation } = linklyApi;
+export const {
+  useGetLinklyQuery,
+  useCreateLinklyMutation,
+  useUpdateLinklyMutation,
+  useDeleteLinklyMutation,
+} = linklyApi;

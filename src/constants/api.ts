@@ -6,6 +6,8 @@ export const API_PATHS = {
   LINKLY: {
     LIST: "/api/linkly/list",
     CREATE: "/api/linkly",
+    UPDATE: "/api/linkly",
+    DELETE: "/api/linkly",
   },
 } as const;
 

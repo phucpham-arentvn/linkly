@@ -1,15 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
 
+  // Initialize theme from localStorage and system preference
+  useEffect(() => {
+    // Check localStorage first
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setIsDark(savedTheme === "dark");
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      return;
+    }
+
+    // If no saved theme, check system preference
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    setIsDark(prefersDark);
+    document.documentElement.setAttribute(
+      "data-theme",
+      prefersDark ? "dark" : "light"
+    );
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    const theme = newTheme ? "dark" : "light";
+    localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  };
+
   return (
     <label className="swap flex flex-col gap-1 bg-base-200 rounded-full p-2 relative">
       <input
         type="checkbox"
-        onChange={() => setIsDark(!isDark)}
+        onChange={toggleTheme}
+        checked={isDark}
         className="theme-controller"
         value="dracula"
       />

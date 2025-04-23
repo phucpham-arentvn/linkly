@@ -1,11 +1,12 @@
 "use client";
 
 import { Link2, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { useCreateLinklyMutation } from "@/redux/services/linkly.api";
 import toast from "react-hot-toast";
 import CopyButton from "@/components/common/CopyButton";
+import { signIn, useSession } from "next-auth/react";
 
 interface LinkInputProps {
   className?: string;
@@ -15,6 +16,20 @@ export default function LinkInput({ className }: LinkInputProps) {
   const [url, setUrl] = useState("");
   const [autoClipboard, setAutoClipboard] = useState(false);
   const [shortUrl, setShortUrl] = useState<string | null>(null);
+  const { data: session } = useSession();
+
+  // Load autoClipboard state from localStorage on component mount
+  useEffect(() => {
+    const savedAutoClipboard = localStorage.getItem("auto-clipboard");
+    if (savedAutoClipboard !== null) {
+      setAutoClipboard(Boolean(JSON.parse(savedAutoClipboard)));
+    }
+  }, []);
+
+  // Save autoClipboard state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("auto-clipboard", JSON.stringify(autoClipboard));
+  }, [autoClipboard]);
 
   const [createLinkly, { isLoading }] = useCreateLinklyMutation();
 
@@ -96,26 +111,28 @@ export default function LinkInput({ className }: LinkInputProps) {
           </span>
         </div>
 
-        {/* Remaining Links Info */}
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-base-content/60">You can create </span>
-          <span className="text-error font-bold">
-            {String(remainingLinks).padStart(2, "0")}
-          </span>
-          <span className="text-base-content/60">
-            more links.{" "}
-            <a href="#" className="link link-primary">
-              Register Now
-            </a>{" "}
-            to enjoy Unlimited usage
-          </span>
-          <div
-            className="tooltip tooltip-top"
-            data-tip="Free users are limited to 5 links per day"
-          >
-            <button className="btn btn-circle btn-ghost btn-xs">?</button>
+        {/* Remaining Links Info - Only show when not logged in */}
+        {!session?.user && (
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-base-content/60">You can create </span>
+            <span className="text-error font-bold">
+              {String(remainingLinks).padStart(2, "0")}
+            </span>
+            <span className="text-base-content/60">
+              more links.{" "}
+              <a onClick={() => signIn()} className="link link-primary">
+                Register Now
+              </a>{" "}
+              to enjoy Unlimited usage
+            </span>
+            <div
+              className="tooltip tooltip-top"
+              data-tip="Free users are limited to 5 links per day"
+            >
+              <button className="btn btn-circle btn-ghost btn-xs">?</button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
