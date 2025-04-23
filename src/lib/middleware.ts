@@ -13,19 +13,12 @@ export async function getUserFromCookie(request: Request): Promise<any> {
     if (!token) {
       return null;
     }
-
     const email = token.email;
-
-    console.log("email", email);
-
     const { data, error } = await supabase
       .from("users")
       .select("*")
       .eq("email", email)
       .single();
-
-    console.log("data", data);
-
     if (error) {
       console.error("Error in getUserFromToken:", error);
       return null;
