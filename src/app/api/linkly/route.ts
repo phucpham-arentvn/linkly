@@ -4,8 +4,6 @@ import { nanoid } from "nanoid";
 import { getUserFromToken } from "@/lib/middleware";
 import { getClientIP } from "@/helper";
 
-// Helper function to get client IP
-
 export const POST = async (request: Request) => {
   try {
     const { url } = await request.json();
@@ -40,6 +38,7 @@ export const POST = async (request: Request) => {
         originalUrl: existingUrl.origin_link,
         shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/l/${existingUrl.short_link}`,
         userId: existingUrl.user_id,
+        icon: existingUrl.icon,
       });
     }
 
@@ -75,6 +74,7 @@ export const POST = async (request: Request) => {
       originalUrl: data.origin_link,
       shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/l/${shortCode}`,
       userId: data.user_id,
+      icon: data.icon,
     });
   } catch (error: any) {
     console.error("Error processing request:", error);

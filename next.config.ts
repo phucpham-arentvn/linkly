@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       "lh3.googleusercontent.com",
       "github.com",
       "cms-assets.tutsplus.com",
+      "www.google.com",
     ],
   },
 };

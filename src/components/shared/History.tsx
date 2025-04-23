@@ -1,11 +1,12 @@
 "use client";
 
 import { FC } from "react";
-import Image from "next/image";
 import clsx from "clsx";
 import { useGetLinklyQuery } from "@/redux/services/linkly.api";
 import { formatDistanceToNow } from "date-fns";
 import CopyButton from "@/components/common/CopyButton";
+import FaviconIcon from "@/components/common/FaviconIcon";
+import { QRCodeSVG } from "qrcode.react";
 
 interface HistoryProps {
   className?: string;
@@ -57,7 +58,7 @@ const History: FC<HistoryProps> = ({ className }) => {
   }
 
   return (
-    <div className={clsx("overflow-x-auto", className)}>
+    <div className={clsx("", className)}>
       <table className="table">
         {/* Table head */}
         <thead>
@@ -73,67 +74,52 @@ const History: FC<HistoryProps> = ({ className }) => {
 
         {/* Table body */}
         <tbody>
-          {response.data.map((link) => (
-            <tr key={link.id} className="hover">
-              <td className="flex items-center gap-2">
-                <span>
-                  {process.env.NEXT_PUBLIC_APP_URL}/api/l/${link.short_link}
-                </span>
-                <CopyButton
-                  textToCopy={`${process.env.NEXT_PUBLIC_APP_URL}/api/l/${link.short_link}`}
-                  className="btn btn-ghost btn-xs gap-2"
-                />
-              </td>
-              <td>
-                <div className="flex items-center gap-2">
-                  {link.origin_link.includes("twitter.com") && (
-                    <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24">
-                      <path
-                        fill="currentColor"
-                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-                      />
-                    </svg>
-                  )}
-                  {link.origin_link.includes("youtube.com") && (
-                    <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24">
-                      <path
-                        fill="currentColor"
-                        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814M9.545 15.568V8.432L15.818 12z"
-                      />
-                    </svg>
-                  )}
-                  <span className="truncate max-w-md">{link.origin_link}</span>
-                </div>
-              </td>
-              <td>
-                {link.icon && (
-                  <Image
-                    src={link.icon}
-                    alt="QR Code"
-                    width={32}
-                    height={32}
-                    className="rounded-lg"
+          {response.data.map((link) => {
+            const shortUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/l/${link.short_link}`;
+            return (
+              <tr key={link.id} className="hover">
+                <td className="flex items-center gap-2">
+                  <span>{shortUrl}</span>
+                  <CopyButton
+                    textToCopy={shortUrl}
+                    className="btn btn-ghost btn-xs gap-2"
                   />
-                )}
-              </td>
-              <td>{link.clicks}</td>
-              <td>
-                <div
-                  className={clsx("badge gap-2", {
-                    "badge-success": link.status === "active",
-                    "badge-error": link.status === "inactive",
+                </td>
+                <td>
+                  <div className="flex items-center gap-2">
+                    <FaviconIcon url={link.origin_link} size={20} />
+                    <span className="truncate max-w-md">
+                      {link.origin_link}
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <div className="relative w-8 h-8 cursor-pointer group">
+                    <QRCodeSVG value={shortUrl} size={32} />
+                    <div className="absolute hidden group-hover:block top-0 left-0 transform -translate-x-1/2 -translate-y-full bg-white p-4 rounded-lg shadow-lg z-10">
+                      <QRCodeSVG value={shortUrl} size={200} />
+                    </div>
+                  </div>
+                </td>
+                <td>{link.clicks}</td>
+                <td>
+                  <div
+                    className={clsx("badge gap-2", {
+                      "badge-success": link.status === "active",
+                      "badge-warning": link.status === "inactive",
+                    })}
+                  >
+                    {link.status === "active" ? "Active" : "Inactive"}
+                  </div>
+                </td>
+                <td>
+                  {formatDistanceToNow(new Date(link.created_at), {
+                    addSuffix: true,
                   })}
-                >
-                  {link.status}
-                </div>
-              </td>
-              <td>
-                {formatDistanceToNow(new Date(link.created_at), {
-                  addSuffix: true,
-                })}
-              </td>
-            </tr>
-          ))}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
